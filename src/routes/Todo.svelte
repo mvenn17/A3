@@ -1,5 +1,7 @@
 <script>
   import { fly } from 'svelte/transition';
+  import {onMount} from 'svelte';
+
   let todoItem = $state("");
   let todoList = $state([]);
 
@@ -7,7 +9,17 @@
 
   let update = $state("Edit")
 
-  function addItem() {
+  onMount(() => {
+     let storedList = localStorage.getItem('storedList');
+     if (storedList) {
+          todoList = (JSON.parse(storedList));
+     }
+  })
+  function updateList() {
+     return localStorage.setItem('storedList', JSON.stringify(todoList));
+}
+
+  function addItem(event) {
     event.preventDefault();
     if (todoItem == "") {
       return;
@@ -20,14 +32,17 @@
       },
     ];
     todoItem = "";
+    updateList();
   }
 
   function removeItem(index) {
     todoList = todoList.toSpliced(index, 1);
+    updateList()
   }
 
   function nuke() {
     todoList = [];
+    localStorage.clear();
   }
   function edit (task) {
     if (todoList.includes(task)){
@@ -39,15 +54,19 @@
   }
 
   function toggleEdit() {
-
     editable = !editable 
 
     if (update == "Edit") {
       update = "Update"
     }
-    else if (update == "Update") {
+    else{
+      /*
+      let _list = document.getElementsByClassName("listContainer")
+      $inspect(_list.getElementsByTagName("span")[0].value)
+      */
       update = "Edit"
     }
+    updateList();
   }
 
   $inspect(todoList);
@@ -62,8 +81,8 @@
   <ul>
     {#each todoList as item, index}
       <li in:fly={{ x: -200, duration: 500}} out:fly={{ x: 200, duration: 500}}>
-        <input class="checkbox" type="checkbox" bind:checked={item.done} />
-        <span class:done={item.done} contenteditable={editable}>{item.text}</span>
+        <input class="checkbox" type="checkbox" bind:checked={item.done} onchange={updateList}/>
+        <span class:done={item.done} contenteditable={editable} >{item.text}</span>
         <button class="x" type="button" onclick={() => removeItem(index)}>x</button>
       </li>
     {/each}
