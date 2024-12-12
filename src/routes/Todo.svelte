@@ -3,6 +3,10 @@
   let todoItem = $state("");
   let todoList = $state([]);
 
+  let editable = $state(false);
+
+  let update = $state("Edit")
+
   function addItem() {
     event.preventDefault();
     if (todoItem == "") {
@@ -25,6 +29,26 @@
   function nuke() {
     todoList = [];
   }
+  function edit (task) {
+    if (todoList.includes(task)){
+      let todoTask = todoList.indexOf(task)
+      todoItem = todoTask.text
+      todoList =  todoList.toSpliced(todoTask, 1)
+    }
+    updateList();
+  }
+
+  function toggleEdit() {
+
+    editable = !editable 
+
+    if (update == "Edit") {
+      update = "Update"
+    }
+    else if (update == "Update") {
+      update = "Edit"
+    }
+  }
 
   $inspect(todoList);
 </script>
@@ -39,7 +63,7 @@
     {#each todoList as item, index}
       <li in:fly={{ x: -200, duration: 500}} out:fly={{ x: 200, duration: 500}}>
         <input class="checkbox" type="checkbox" bind:checked={item.done} />
-        <span class:done={item.done}>{item.text}</span>
+        <span class:done={item.done} contenteditable={editable}>{item.text}</span>
         <button class="x" type="button" onclick={() => removeItem(index)}>x</button>
       </li>
     {/each}
@@ -48,8 +72,10 @@
 
 {#if todoList.length == 0}
   <button class="clear" disabled type="button">Clear All</button>
+  <button class="edit" disabled type="button">{update}</button>
 {:else}
   <button class="clear" type="button" onclick={nuke}>Clear All</button>
+  <button class="edit {editable}" type="button" onclick={() => toggleEdit()}>{update}</button>
 {/if}
 
 <style>
@@ -110,6 +136,36 @@
     transition: 0.3s;
     text-shadow: 1px 1px 1px rgb(0, 0, 0);
   }
+  .edit {
+    border-radius: 20px;
+    font-size: 0.8em;
+    border: 0;
+    background-color: #979be3;
+    font-family: "Chewy", system-ui;
+    color: white;
+    padding: 0px 10px;
+    transition: 0.3s;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    margin-left: 8px;
+  }
+  .edit:hover {
+    background-color: #535586;
+    transition: 0.3s;
+  }
+  .edit.true {
+    background-color: #4b51cd;
+    margin-left: 8px;
+  }
+  .edit.true:hover {
+    background-color: #362095;
+    margin-left: 8px;
+  }
+  .edit:disabled {
+    opacity: 50%;
+  }
+  .edit:disabled:hover {
+    background-color: #979be3;
+  }
   .x:hover {
     background-color: #535586;
     transition: 0.3s;
@@ -153,6 +209,7 @@
     width: 100%;
     padding: 5px;
     text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    text-wrap: wrap;
   }
   li > span {
     flex-grow: 5;
