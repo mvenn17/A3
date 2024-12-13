@@ -11,14 +11,11 @@ body {
 }
 h3 {
       font-family: "Quicksand", sans-serif;
-      font-size: 0.7em;
+      font-size: 0.6em;
       font-weight: 600;
       padding: 0px 100px;
       margin-bottom: 45px;
       text-shadow: 1px 1px 1px rgb(0, 0, 0);
- }
- h1 {
-      margin-bottom: 0;
  }
   @media screen and (max-width: 850px){
      h3 {

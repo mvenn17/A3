@@ -217,6 +217,8 @@
     font-size: 0.7em;
     font-weight: 600;
     padding: 0.5em;
+    background-color:#979be300;
+    color: white;
   }
   ul {
     list-style: none;
