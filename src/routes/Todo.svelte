@@ -6,7 +6,7 @@
   let todoList = $state([]);
 
   let editable = $state(false);
-
+  let editedItem = $state();
   let update = $state("Edit")
 
   onMount(() => {
@@ -15,6 +15,8 @@
           todoList = (JSON.parse(storedList));
      }
   })
+
+
   function updateList() {
      return localStorage.setItem('storedList', JSON.stringify(todoList));
 }
@@ -56,16 +58,8 @@
   function toggleEdit() {
     editable = !editable 
 
-    if (update == "Edit") {
-      update = "Update"
-    }
-    else{
-      /*
-      let _list = document.getElementsByClassName("listContainer")
-      $inspect(_list.getElementsByTagName("span")[0].value)
-      */
-      update = "Edit"
-    }
+    update = update == "Edit" ? "Update" : "Edit";
+
     updateList();
   }
 
@@ -82,7 +76,11 @@
     {#each todoList as item, index}
       <li in:fly={{ x: -200, duration: 500}} out:fly={{ x: 200, duration: 500}}>
         <input class="checkbox" type="checkbox" bind:checked={item.done} onchange={updateList}/>
-        <span class:done={item.done} contenteditable={editable} >{item.text}</span>
+        {#if (editable)}
+        <input class="edit-input" type="text" bind:value={item.text} >
+        {:else}
+        <span class:done={item.done}>{item.text}</span>
+        {/if}
         <button class="x" type="button" onclick={() => removeItem(index)}>x</button>
       </li>
     {/each}
@@ -213,6 +211,12 @@
     font-family: "Quicksand", sans-serif;
     font-size: 0.7em;
     font-weight: 600;
+  }
+  .edit-input {
+    font-family: "Quicksand", sans-serif;
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 0.5em;
   }
   ul {
     list-style: none;
