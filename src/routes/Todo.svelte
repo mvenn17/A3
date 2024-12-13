@@ -246,4 +246,16 @@
     color: grey;
     text-decoration: line-through;
   }
+  @media screen and (max-width: 850px){
+  li {
+          padding: 0 2vw 0 2vw
+          
+  }
+  .edit {
+    margin-bottom: 3vh;
+  }
+  .clear {
+    margin-bottom: 3vh;
+  }
+ } 
 </style>

@@ -12,7 +12,13 @@
 
      h1 {
           text-shadow: 1px 1px 2px #000000;
-          font-size: 1.9em;
+          font-size: 3em;
      }
-     
+     @media screen and (max-width: 850px){
+     h1 {
+          padding: 0px 50px;
+          font-size: 1.7em;
+     }
+
+ } 
 </style>
